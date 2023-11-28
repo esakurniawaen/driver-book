@@ -69,8 +69,10 @@ export default function JourneyForm() {
                         label="Pax"
                         type="number"
                         min="1"
-                        value={newJourney.pax}
-                        onValueChange={(newPax) => set("pax", newPax)}
+                        value={newJourney.pax <= 0 ? "" : newJourney.pax}
+                        onValueChange={(newPax) =>
+                            set("pax", newPax ? Number(newPax) : 0)
+                        }
                         required
                         defaultValue={"hello world"}
                     />
