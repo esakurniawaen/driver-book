@@ -1,19 +1,21 @@
-import type { Journey } from "@/types";
 import Item from "./Item";
+import { useAtom, useSetAtom } from "jotai";
+import { journeysAtom, type Journey } from "@/atom";
 
 interface CardProps {
     journey: Journey;
-    onDelete: () => void;
 }
 
-export default function Card({ journey, onDelete }: CardProps) {
+export default function Card({ journey }: CardProps) {
+    const [journeys, setJourneys] = useAtom(journeysAtom);
+
     function handleDelete() {
         const isContinue = window.confirm(
             "Are you sure want to delete this item?"
         );
-        if (isContinue) {
-            onDelete();
-        }
+        if (!isContinue) return;
+
+        setJourneys(journeys.filter(({ id }) => id !== journey.id));
     }
 
     function toDisplayServiceType() {
@@ -26,10 +28,12 @@ export default function Card({ journey, onDelete }: CardProps) {
     return (
         <div
             key={journey.id}
-            className="py-3 px-5 text-slate-700 rounded-lg shadow bg-slate-100"
+            className="py-3 px-5 rounded-lg shadow bg-slate-100"
         >
             <div className="flex px-1 mb-3 justify-between items-center">
-                <h3 className="font-semibold text-xl">{toDisplayServiceType()}</h3>
+                <h3 className="font-bold text-slate-700 text-2xl">
+                    {toDisplayServiceType()}
+                </h3>
                 <button onClick={handleDelete} className="text-red-400">
                     Delete
                 </button>
@@ -37,15 +41,21 @@ export default function Card({ journey, onDelete }: CardProps) {
 
             <ul className="gap-2 grid">
                 <h4 className="sr-only">Details</h4>
-                <Item>Name: {journey.passangerName}</Item>
                 <Item>
-                    Pax: {journey.pax}
+                    <span className="text-slate-500">Name:</span>{" "}
+                    {journey.passangerName}
+                </Item>
+                <Item>
+                    <span className="text-slate-500">Pax:</span> {journey.pax}
                     {journey.pax > 1 ? " persons" : " person"}
                 </Item>
-                <Item>From: {journey.pickupLocation}</Item>
+                <Item>
+                    <span className="text-slate-500">From:</span>{" "}
+                    {journey.pickupLocation}
+                </Item>
                 {journey.serviceType === "FULL_DAY" && (
                     <Item>
-                        <span>Route:</span>
+                        <span className="text-slate-500">Route:</span>
                         <ul className="list-decimal rounded divide-y divide-slate-200 border border-slate-200 list-inside">
                             {journey.destinations.map((destination) => (
                                 <li className="py-1 px-2" key={destination.id}>
@@ -55,7 +65,18 @@ export default function Card({ journey, onDelete }: CardProps) {
                         </ul>
                     </Item>
                 )}
-                <Item>To: {journey.dropoffLocation}</Item>
+                <Item>
+                    <span className="text-slate-500">To:</span>{" "}
+                    {journey.dropoffLocation}
+                </Item>
+                {journey.note && (
+                    <Item>
+                        <span className="block text-center text-lg border-b pb-2 text-slate-500 border-slate-300">
+                            Note
+                        </span>
+                        <span className="block pt-2">{journey.note}</span>
+                    </Item>
+                )}
             </ul>
         </div>
     );

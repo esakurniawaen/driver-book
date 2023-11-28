@@ -1,3 +1,8 @@
+import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+export const journeysAtom = atomWithStorage<Journey[]>('journeys', [])
+
 interface CommonJourneyProps {
     id: string;
     date: string;
@@ -5,6 +10,7 @@ interface CommonJourneyProps {
     pax: number;
     pickupLocation: string;
     dropoffLocation: string;
+    note?: string;
 }
 
 export interface FullDayJourney extends CommonJourneyProps {

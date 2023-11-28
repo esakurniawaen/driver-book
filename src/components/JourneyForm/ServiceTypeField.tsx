@@ -1,4 +1,4 @@
-import { FullDayJourney, NonFullDayJourney } from "@/types";
+import { FullDayJourney, NonFullDayJourney } from "@/atom";
 
 type ServiceType =
     | FullDayJourney["serviceType"]
@@ -19,7 +19,7 @@ export default function ServiceTypeField({
                 Service type
             </label>
             <select
-                className="py-1.5 outline-none focus:border-sky-500 rounded-md px-2 border border-slate"
+                className="py-1.5 outline-none focus:border-blue-500 rounded-md px-2 border border-slate"
                 value={serviceType}
                 onChange={(evt) =>
                     onServiceTypeChange(evt.target.value as ServiceType)

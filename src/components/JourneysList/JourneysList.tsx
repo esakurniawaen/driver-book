@@ -1,22 +1,19 @@
-import type { Journey } from "@/types";
+import { journeysAtom, type Journey } from "@/atom";
 import { groupBy } from "@/utils";
 import Card from "./Card";
-
-interface JourneysListProps {
-    journeys: Journey[];
-    onJourneyDelete: (journeyId: string) => void;
-}
+import { useAtomValue } from "jotai";
 
 type GroupedJourneysByDate = {
     [date: string]: Journey[];
 };
 
-export default function JourneysList({ journeys, onJourneyDelete }: JourneysListProps) {
+export default function JourneysList() {
+    const journeys = useAtomValue(journeysAtom);
     const groupedByDate: GroupedJourneysByDate = groupBy(journeys, "date");
     const sortedDate = Object.keys(groupedByDate).sort();
 
     return (
-        <div className="mx-4 mb-4 mt-4 space-y-8">
+        <div className="mx-4 grid gap-8">
             {sortedDate.map((date) => (
                 <div className="" key={date}>
                     <h2 className="mb-2 ml-1">
@@ -29,11 +26,7 @@ export default function JourneysList({ journeys, onJourneyDelete }: JourneysList
                     </h2>
                     <div className="grid gap-4">
                         {groupedByDate[date].map((journey) => (
-                            <Card
-                                key={journey.id}
-                                journey={journey}
-                                onDelete={() => onJourneyDelete(journey.id)}
-                            />
+                            <Card key={journey.id} journey={journey} />
                         ))}
                     </div>
                 </div>

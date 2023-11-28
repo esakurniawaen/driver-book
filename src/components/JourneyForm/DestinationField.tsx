@@ -1,4 +1,4 @@
-import type { FullDayJourney } from "@/types";
+import type { FullDayJourney } from "@/atom";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { createId } from "@paralleldrive/cuid2";
 import Input from "../Input";

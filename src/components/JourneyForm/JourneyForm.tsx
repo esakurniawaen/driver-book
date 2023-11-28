@@ -1,105 +1,101 @@
-import type { FullDayJourney, Journey, NonFullDayJourney } from "@/types";
+import type { FullDayJourney, Journey } from "@/atom";
+import { journeysAtom } from "@/atom";
+import { capitalizeEveryWord, capitalizeFirstWord } from "@/utils";
 import { createId } from "@paralleldrive/cuid2";
+import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { useMap } from "react-use";
 import DestinationField from "./DestinationField";
 import FormField from "./FormField";
 import ServiceTypeField from "./ServiceTypeField";
-import { capitalizeEveryWord } from "@/utils";
 
-interface JourneyFormProps {
-    onSubmit: (toAddJourney: Journey) => void;
-}
+const INITIAL_NEW_JOURNEY: Journey = {
+    id: createId(),
+    serviceType: "CHECK_IN",
+    passangerName: "",
+    pax: 0,
+    pickupLocation: "",
+    dropoffLocation: "",
+    date: "",
+    note: undefined,
+};
 
-type ServiceType =
-    | FullDayJourney["serviceType"]
-    | NonFullDayJourney["serviceType"];
+export default function JourneyForm() {
+    const router = useRouter();
 
-export default function JourneyForm({ onSubmit }: JourneyFormProps) {
-    const [serviceType, setServiceType] = useState<ServiceType>("CHECK_IN");
-    const [passangerName, setPassangerName] = useState("");
-    const [pax, setPax] = useState<string>("");
-    const [pickupLocation, setPickupLocation] = useState("");
+    const [journeys, setJourneys] = useAtom(journeysAtom);
+
+    const [newJourney, { set }] = useMap(INITIAL_NEW_JOURNEY);
     const [destinations, setDestinations] = useState<
         FullDayJourney["destinations"]
-    >([{ id: createId(), location: "" }]);
-    const [dropoffLocation, setDropoffLocation] = useState("");
-    const [date, setDate] = useState<string>("");
-
-    function resetForm() {
-        setServiceType("CHECK_IN");
-        setPassangerName("");
-        setPax("");
-        setPickupLocation("");
-        setDestinations([
-            {
-                id: createId(),
-                location: "",
-            },
-        ]);
-        setDropoffLocation("");
-        setDate("");
-    }
+    >([]);
 
     function handleJourneySubmit(evt: FormEvent<HTMLFormElement>) {
         evt.preventDefault();
 
-        if (serviceType === "FULL_DAY") {
-            onSubmit({
-                id: createId(),
-                serviceType,
-                passangerName,
-                pax: Number(pax),
-                pickupLocation,
-                destinations,
-                dropoffLocation,
-                date: date as string,
-            });
+        if (newJourney.serviceType === "FULL_DAY") {
+            setJourneys([{ ...newJourney, destinations }, ...journeys]);
         } else {
-            onSubmit({
-                id: createId(),
-                serviceType,
-                passangerName,
-                pax: Number(pax),
-                pickupLocation,
-                dropoffLocation,
-                date: date as string,
-            });
+            setJourneys([newJourney, ...journeys]);
         }
-        resetForm();
+
+        router.push("/");
     }
 
     return (
-        <form className="w-full h-full" onSubmit={handleJourneySubmit}>
+        <form onSubmit={handleJourneySubmit}>
             <ServiceTypeField
-                serviceType={serviceType}
-                onServiceTypeChange={setServiceType}
+                serviceType={newJourney.serviceType}
+                onServiceTypeChange={(newServiceType) =>
+                    set("serviceType", newServiceType)
+                }
             />
 
-            <div className="px-4 pb-3 space-y-3">
+            <div className="px-4 space-y-3">
                 <FormField
                     label="Name"
-                    value={passangerName}
-                    onValueChange={(value) =>
-                        setPassangerName(capitalizeEveryWord(value))
+                    value={newJourney.passangerName}
+                    onValueChange={(newPassangerName) =>
+                        set(
+                            "passangerName",
+                            capitalizeEveryWord(newPassangerName)
+                        )
                     }
+                    required
                 />
+                <div className="flex gap-3">
+                    <FormField
+                        label="Pax"
+                        type="number"
+                        min="1"
+                        value={newJourney.pax}
+                        onValueChange={(newPax) => set("pax", newPax)}
+                        required
+                        defaultValue={"hello world"}
+                    />
+                    <FormField
+                        label="Date"
+                        type="date"
+                        value={newJourney.date}
+                        onValueChange={(newDate) => set("date", newDate)}
+                        required
+                    />
+                </div>
 
-                <FormField
-                    label="Pax"
-                    type="number"
-                    min="1"
-                    value={pax}
-                    onValueChange={setPax}
-                />
                 <FormField
                     label="Pickup Location"
-                    value={pickupLocation}
-                    onValueChange={(value) =>
-                        setPickupLocation(capitalizeEveryWord(value))
+                    value={newJourney.pickupLocation}
+                    onValueChange={(newPickupLocation) =>
+                        set(
+                            "pickupLocation",
+                            capitalizeEveryWord(newPickupLocation)
+                        )
                     }
+                    required
                 />
 
-                {serviceType === "FULL_DAY" && (
+                {newJourney.serviceType === "FULL_DAY" && (
                     <DestinationField
                         destinations={destinations}
                         onDestinationsChange={setDestinations}
@@ -108,21 +104,28 @@ export default function JourneyForm({ onSubmit }: JourneyFormProps) {
 
                 <FormField
                     label="Drop-off Location"
-                    value={dropoffLocation}
-                    onValueChange={(value) =>
-                        setDropoffLocation(capitalizeEveryWord(value))
+                    value={newJourney.dropoffLocation}
+                    onValueChange={(newDropoffLocation) =>
+                        set(
+                            "dropoffLocation",
+                            capitalizeEveryWord(newDropoffLocation)
+                        )
                     }
-                />
-                <FormField
-                    label="Date"
-                    type="date"
-                    value={date}
-                    onValueChange={setDate}
+                    required
                 />
 
+                <FormField
+                    label="Note (Optional)"
+                    value={newJourney.note ?? ""}
+                    onValueChange={(newNote) =>
+                        set("note", capitalizeFirstWord(newNote))
+                    }
+                />
+            </div>
+            <div className="mt-5 px-4">
                 <button
                     type="submit"
-                    className="bg-sky-400 hover:bg-sky-500 hover:text-slate-200 text-slate-50 rounded-md py-2 w-full"
+                    className="text-slate-100 hover:bg-blue-500 hover:text-slate-50 bg-blue-400 rounded-md py-2 w-full"
                 >
                     Add
                 </button>
