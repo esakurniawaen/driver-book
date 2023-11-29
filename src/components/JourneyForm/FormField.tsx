@@ -1,35 +1,25 @@
+import { InputHTMLAttributes } from "react";
 import Input from "../Input";
 
-interface FormFieldProps<T> {
+interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
-    type?: "number" | "date";
-    min?: string;
-    required?: boolean;
-    value: T;
-    defaultValue?: string | undefined;
-    onValueChange: (value: T) => void;
+    onValueChange: (value: string) => void;
 }
 
-export default function FormField<T extends string | number | undefined>({
+export default function FormField({
     label,
-    type,
-    min,
-    required,
-    defaultValue,
     value,
     onValueChange,
-}: FormFieldProps<T>) {
+    ...restProps
+}: FormFieldProps) {
     return (
         <>
-            <div className="flex w-full flex-col">
+            <div className="">
                 <label>{label}</label>
                 <Input
-                    required={required}
-                    defaultValue={defaultValue}
-                    type={type ?? "text"}
-                    min={min}
                     value={value}
-                    onChange={(evt) => onValueChange(evt.target.value as T)}
+                    onChange={(evt) => onValueChange(evt.target.value)}
+                    {...restProps}
                 />
             </div>
         </>

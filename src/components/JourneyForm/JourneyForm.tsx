@@ -43,6 +43,7 @@ export default function JourneyForm() {
         router.push("/");
     }
 
+ 
     return (
         <form onSubmit={handleJourneySubmit}>
             <ServiceTypeField
@@ -62,27 +63,31 @@ export default function JourneyForm() {
                             capitalizeEveryWord(newPassangerName)
                         )
                     }
+                    autoFocus
                     required
                 />
-                <div className="flex gap-3">
-                    <FormField
-                        label="Pax"
-                        type="number"
-                        min="1"
-                        value={newJourney.pax <= 0 ? "" : newJourney.pax}
-                        onValueChange={(newPax) =>
-                            set("pax", newPax ? Number(newPax) : 0)
-                        }
-                        required
-                        defaultValue={"hello world"}
-                    />
-                    <FormField
-                        label="Date"
-                        type="date"
-                        value={newJourney.date}
-                        onValueChange={(newDate) => set("date", newDate)}
-                        required
-                    />
+                <div className="flex gap-x-3">
+                    <div className="w-1/2">
+                        <FormField
+                            label="Pax"
+                            type="number"
+                            min="1"
+                            value={newJourney.pax <= 0 ? '' : newJourney.pax}
+                            onValueChange={(newPax) =>
+                                set("pax", newPax !== '' ? Number(newPax) : 0)
+                            }
+                            required
+                        />
+                    </div>
+                    <div className="w-1/2">
+                        <FormField
+                            label="Date"
+                            type="date"
+                            value={newJourney.date}
+                            onValueChange={(newDate) => set("date", newDate)}
+                            required
+                        />
+                    </div>
                 </div>
 
                 <FormField
