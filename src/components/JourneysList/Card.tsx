@@ -18,6 +18,10 @@ export default function Card({ journey }: CardProps) {
         setJourneys(journeys.filter(({ id }) => id !== journey.id));
     }
 
+    function handleEdit() {
+        window.alert('The "Edit" feature will coming soon.');
+    }
+
     function toDisplayServiceType() {
         if (journey.serviceType === "CHECK_IN") return "Check in";
         if (journey.serviceType === "CHECK_OUT") return "Check out";
@@ -34,9 +38,12 @@ export default function Card({ journey }: CardProps) {
                 <h3 className="font-bold text-slate-700 text-2xl">
                     {toDisplayServiceType()}
                 </h3>
-                <button onClick={handleDelete} className="text-red-400">
-                    Delete
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={handleDelete} className="text-red-400">
+                        Delete
+                    </button>
+                    <button className="bg-slate-200 rounded text-slate-700 hover:bg-slate-300 hover:text-slate-800 py-0.5 px-2" onClick={handleEdit}>Edit</button>
+                </div>
             </div>
 
             <ul className="gap-2 grid">

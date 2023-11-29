@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    color: #475569;
-    background-color: #f8fafc;
+    color: #475569; /* slate 600 */
+    background-color: #f8fafc; /* slate 50 */
     font-weight: 500;
 }
