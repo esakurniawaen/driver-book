@@ -1,5 +1,5 @@
-import Item from "./Item";
-import { useAtom, useSetAtom } from "jotai";
+import Detail from "./Detail";
+import { useAtom } from "jotai";
 import { journeysAtom, type Journey } from "@/atom";
 
 interface CardProps {
@@ -48,20 +48,20 @@ export default function Card({ journey }: CardProps) {
 
             <ul className="gap-2 grid">
                 <h4 className="sr-only">Details</h4>
-                <Item>
+                <Detail>
                     <span className="text-slate-500">Name:</span>{" "}
                     {journey.passangerName}
-                </Item>
-                <Item>
+                </Detail>
+                <Detail>
                     <span className="text-slate-500">Pax:</span> {journey.pax}
                     {journey.pax > 1 ? " persons" : " person"}
-                </Item>
-                <Item>
+                </Detail>
+                <Detail>
                     <span className="text-slate-500">From:</span>{" "}
                     {journey.pickupLocation}
-                </Item>
+                </Detail>
                 {journey.serviceType === "FULL_DAY" && (
-                    <Item>
+                    <Detail>
                         <span className="text-slate-500">Route:</span>
                         <ul className="list-decimal rounded divide-y divide-slate-200 border border-slate-200 list-inside">
                             {journey.destinations.map((destination) => (
@@ -70,19 +70,19 @@ export default function Card({ journey }: CardProps) {
                                 </li>
                             ))}
                         </ul>
-                    </Item>
+                    </Detail>
                 )}
-                <Item>
+                <Detail>
                     <span className="text-slate-500">To:</span>{" "}
                     {journey.dropoffLocation}
-                </Item>
+                </Detail>
                 {journey.note && (
-                    <Item>
+                    <Detail>
                         <span className="block text-center text-lg border-b pb-2 text-slate-500 border-slate-300">
                             Note
                         </span>
                         <span className="block pt-2">{journey.note}</span>
-                    </Item>
+                    </Detail>
                 )}
             </ul>
         </div>

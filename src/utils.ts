@@ -6,7 +6,7 @@ export function groupBy<T>(collection: T[], key: keyof T) {
 
         previous[current[key]].push(current);
         return previous;
-    }, {} as any); // tried to figure this out, help!!!!!
+    }, {} as any); 
     return groupedResult;
 }
 
