@@ -1,6 +1,3 @@
-import { atomWithStorage } from "jotai/utils";
-
-export const journeysAtom = atomWithStorage<Journey[]>('journeys', [])
 
 interface CommonJourneyProps {
     id: string;
@@ -21,3 +18,5 @@ export interface NonFullDayJourney extends CommonJourneyProps {
 }
 
 export type Journey = FullDayJourney | NonFullDayJourney;
+
+export type ColorTheme = "BLUE" | "GREEN";

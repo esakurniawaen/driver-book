@@ -1,21 +1,21 @@
-import { journeysAtom, type Journey } from "@/atom";
+import { useJourneyStore } from "@/store";
 import { groupBy } from "@/utils";
 import Card from "./Card";
-import { useAtomValue } from "jotai";
+import { Journey } from "@/types";
 
 type GroupedJourneysByDate = {
     [date: string]: Journey[];
 };
 
 export default function JourneysList() {
-    const journeys = useAtomValue(journeysAtom);
+    const journeys = useJourneyStore(state => state.journeys)
     const groupedByDate: GroupedJourneysByDate = groupBy(journeys, "date");
     const sortedDate = Object.keys(groupedByDate).sort();
 
     return (
         <div className="mx-4 grid gap-8">
             {sortedDate.map((date) => (
-                <div className="" key={date}>
+                <section className="" key={date}>
                     <h2 className="mb-2 ml-1">
                         {new Date(date).toLocaleDateString(undefined, {
                             weekday: "long",
@@ -29,7 +29,7 @@ export default function JourneysList() {
                             <Card key={journey.id} journey={journey} />
                         ))}
                     </div>
-                </div>
+                </section>
             ))}
         </div>
     );

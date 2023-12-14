@@ -1,6 +1,6 @@
 "use client";
 
-import JourneyForm from "@/components/JourneyForm/JourneyForm";
+import JourneyForm from "@/components/JourneyForm";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 

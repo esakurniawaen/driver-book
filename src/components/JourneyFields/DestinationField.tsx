@@ -1,10 +1,11 @@
-import type { FullDayJourney } from "@/atom";
+import type { ColorTheme, FullDayJourney } from "@/types";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { createId } from "@paralleldrive/cuid2";
 import Input from "../Input";
 import { capitalizeEveryWord } from "@/utils";
 
 interface DestinationFieldProps {
+    colorTheme: ColorTheme;
     destinations: FullDayJourney["destinations"];
     onDestinationsChange: (
         updatedDestinations: FullDayJourney["destinations"]
@@ -12,6 +13,7 @@ interface DestinationFieldProps {
 }
 
 export default function DestinationField({
+    colorTheme,
     destinations,
     onDestinationsChange,
 }: DestinationFieldProps) {
@@ -20,7 +22,7 @@ export default function DestinationField({
             destination.id === destinationId
                 ? {
                       ...destination,
-                      location: updatedLocation,
+                      location: capitalizeEveryWord(updatedLocation),
                   }
                 : destination
         );
@@ -45,23 +47,24 @@ export default function DestinationField({
     }
 
     return (
-        <div className="">
+        <div>
             <label>Route</label>
-
             <div className="space-y-2">
                 {destinations.map((destination, idx) => (
                     <div className="flex items-center" key={idx}>
                         <div className="w-6">{idx + 1}.</div>
                         <div className="grow">
                             <Input
+                                colorTheme={colorTheme}
                                 required
                                 value={destination.location}
                                 onChange={(evt) =>
                                     changeLocation(
                                         destination.id,
-                                        capitalizeEveryWord(evt.target.value)
+                                        evt.target.value
                                     )
                                 }
+                                autoFocus
                             />
                         </div>
 

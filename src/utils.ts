@@ -10,7 +10,7 @@ export function groupBy<T>(collection: T[], key: keyof T) {
     return groupedResult;
 }
 
-export function capitalizeFirstWord(str: string) {
+function capitalizeFirstWord(str: string) {
     const firstChar = str.charAt(0).toLocaleUpperCase();
     const restOfStr = str.substring(1).toLocaleLowerCase();
 
