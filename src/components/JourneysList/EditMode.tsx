@@ -5,6 +5,7 @@ import JourneyFields from "../JourneyFields";
 import { Mode } from "./Card";
 import ServiceTypeSelect from "../ServiceTypeSelect";
 import { useJourneyStore } from "@/store";
+import _ from 'lodash'
 
 type EditModeProps = {
     journey: Journey;
@@ -48,19 +49,20 @@ export default function EditMode({ journey, onModeChange }: EditModeProps) {
                         >
                             Cancel
                         </button>
-
-                        <button
-                            type="submit"
-                            className="bg-emerald-500 rounded transition hover:text-slate-50 text-slate-100 hover:bg-emerald-600 py-0.5 px-2"
-                        >
-                            Save
-                        </button>
+                        {!_.isEqual(journey, modifiedJourney) && (
+                            <button
+                                type="submit"
+                                className="bg-emerald-500 rounded transition hover:text-slate-50 text-slate-100 hover:bg-emerald-600 py-0.5 px-2"
+                            >
+                                Save
+                            </button>
+                        )}
                     </div>
                 </div>
 
                 <JourneyFields
                     spaceBetween="SMALL"
-                    colorTheme='GREEN'
+                    colorTheme="GREEN"
                     journey={modifiedJourney}
                     onEachJourneyFieldChange={setEachField}
                     onAllJourneyFieldsChange={setAllFields}

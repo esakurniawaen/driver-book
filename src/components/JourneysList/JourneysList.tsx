@@ -15,7 +15,7 @@ export default function JourneysList() {
     return (
         <div className="mx-4 grid gap-8">
             {sortedDate.map((date) => (
-                <section className="" key={date}>
+                <section key={date}>
                     <h2 className="mb-2 ml-1">
                         {new Date(date).toLocaleDateString(undefined, {
                             weekday: "long",
