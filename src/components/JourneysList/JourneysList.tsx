@@ -1,4 +1,4 @@
-import { useJourneyStore } from "@/store";
+import { useJourneyStore } from "@/useJourneyStore";
 import { groupBy } from "@/utils";
 import Card from "./Card";
 import { Journey } from "@/types";
@@ -8,7 +8,7 @@ type GroupedJourneysByDate = {
 };
 
 export default function JourneysList() {
-    const journeys = useJourneyStore(state => state.journeys)
+    const journeys = useJourneyStore((state) => state.journeys);
     const groupedByDate: GroupedJourneysByDate = groupBy(journeys, "date");
     const sortedDate = Object.keys(groupedByDate).sort();
 

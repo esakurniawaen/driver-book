@@ -1,10 +1,9 @@
 import type { Journey } from "@/types";
-import { useJourneyStore } from "@/store";
+import { useJourneyStore } from "@/useJourneyStore";
 import { createId } from "@paralleldrive/cuid2";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
-import { useMap } from "react-use";
-import JourneyFields from "./JourneyFields/JourneyFields";
+import { FormEvent, useState } from "react";
+import JourneyFields from "./JourneyFields";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 
 const INITIAL_NEW_JOURNEY: Journey = {
@@ -22,8 +21,7 @@ export default function JourneyForm() {
     const router = useRouter();
 
     const addJourney = useJourneyStore((state) => state.addJourney);
-    const [newJourney, { set: setEachField, setAll: setAllFields }] =
-        useMap(INITIAL_NEW_JOURNEY);
+    const [newJourney, setNewJourney] = useState(INITIAL_NEW_JOURNEY);
 
     function handleJourneySubmit(evt: FormEvent<HTMLFormElement>) {
         evt.preventDefault();
@@ -34,7 +32,7 @@ export default function JourneyForm() {
 
     return (
         <form onSubmit={handleJourneySubmit}>
-            <div className="flex shadow-sm rounded-xl p-4 mb-3 bg-slate-100 justify-between items-center">
+            <div className="flex mx-2 shadow-sm rounded-xl p-4 mb-3 bg-slate-100 justify-between items-center">
                 <label className="text-lg text-slate-700 font-semibold">
                     Service type
                 </label>
@@ -42,8 +40,7 @@ export default function JourneyForm() {
                     size="MEDIUM"
                     colorTheme="BLUE"
                     journey={newJourney}
-                    onEachJourneyFieldChange={setEachField}
-                    onAllJourneyFieldsChange={setAllFields}
+                    onJourneyChange={setNewJourney}
                 />
             </div>
 
@@ -52,8 +49,7 @@ export default function JourneyForm() {
                     spaceBetween="LARGE"
                     colorTheme="BLUE"
                     journey={newJourney}
-                    onEachJourneyFieldChange={setEachField}
-                    onAllJourneyFieldsChange={setAllFields}
+                    onJourneyChange={setNewJourney}
                 />
             </div>
 

@@ -2,7 +2,7 @@ import { Journey } from "@/types";
 import { Mode } from "./Card";
 import _ from "lodash";
 import { ReactNode } from "react";
-import { useJourneyStore } from "@/store";
+import { useJourneyStore } from "@/useJourneyStore";
 
 type ViewModeProps = {
     journey: Journey;

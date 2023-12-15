@@ -3,8 +3,17 @@
 import JourneysList from "@/components/JourneysList";
 import { SquaresPlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
+     const [isClient, setIsClient] = useState(false);
+
+     useEffect(() => {
+         setIsClient(true);
+     }, []);
+
+    if (!isClient) return null;
+    
     return (
         <>
             <header className="shadow-md mb-4 flex items-center justify-between z-20 top-0 backdrop-blur-xl bg-white/30 p-4 sticky inset-x-0">

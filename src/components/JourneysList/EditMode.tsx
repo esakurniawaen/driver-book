@@ -1,11 +1,10 @@
 import { Journey } from "@/types";
-import { ChangeEvent, FormEvent } from "react";
-import { useMap } from "react-use";
+import { useJourneyStore } from "@/useJourneyStore";
+import _ from "lodash";
+import { FormEvent, useState } from "react";
 import JourneyFields from "../JourneyFields";
-import { Mode } from "./Card";
 import ServiceTypeSelect from "../ServiceTypeSelect";
-import { useJourneyStore } from "@/store";
-import _ from 'lodash'
+import { Mode } from "./Card";
 
 type EditModeProps = {
     journey: Journey;
@@ -15,11 +14,10 @@ type EditModeProps = {
 export default function EditMode({ journey, onModeChange }: EditModeProps) {
     const updateJourney = useJourneyStore((state) => state.updateJourney);
 
-    const [modifiedJourney, { set: setEachField, setAll: setAllFields }] =
-        useMap(journey);
+    const [modifiedJourney, setModifiedJourney] = useState(journey);
 
     function handleCancel() {
-        setAllFields(journey);
+        setModifiedJourney(journey);
         onModeChange("VIEW");
     }
 
@@ -37,9 +35,8 @@ export default function EditMode({ journey, onModeChange }: EditModeProps) {
                     <ServiceTypeSelect
                         size="LARGE"
                         colorTheme="GREEN"
-                        journey={journey}
-                        onEachJourneyFieldChange={setEachField}
-                        onAllJourneyFieldsChange={setAllFields}
+                        journey={modifiedJourney}
+                        onJourneyChange={setModifiedJourney}
                     />
                     <div className="flex items-center gap-3">
                         <button
@@ -64,8 +61,7 @@ export default function EditMode({ journey, onModeChange }: EditModeProps) {
                     spaceBetween="SMALL"
                     colorTheme="GREEN"
                     journey={modifiedJourney}
-                    onEachJourneyFieldChange={setEachField}
-                    onAllJourneyFieldsChange={setAllFields}
+                    onJourneyChange={setModifiedJourney}
                 />
             </form>
         </article>

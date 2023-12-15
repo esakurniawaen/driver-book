@@ -7,49 +7,34 @@ type ServiceTypeSelectProps = {
     size: "MEDIUM" | "LARGE";
     colorTheme: ColorTheme;
     journey: Journey;
-    onEachJourneyFieldChange: <
-        K extends
-            | "passangerName"
-            | "date"
-            | "pax"
-            | "pickupLocation"
-            | "dropoffLocation"
-            | "note"
-            | "id"
-            | "serviceType"
-    >(
-        key: K,
-        value: (FullDayJourney | NonFullDayJourney)[K]
-    ) => void;
-    onAllJourneyFieldsChange: (
-        newJourney: FullDayJourney | NonFullDayJourney
-    ) => void;
+    onJourneyChange: (newJourney: Journey) => void;
 };
 
 export default function ServiceTypeSelect({
     size,
     colorTheme,
     journey,
-    onEachJourneyFieldChange,
-    onAllJourneyFieldsChange,
+    onJourneyChange,
 }: ServiceTypeSelectProps) {
     function handleServiceTypeChange(evt: ChangeEvent<HTMLSelectElement>) {
         const nextType = evt.target.value as Journey["serviceType"];
 
         if (journey.serviceType === "FULL_DAY") {
-            if (nextType === "FULL_DAY") return;
-            const { serviceType, destinations, ...rest } = journey;
-            onAllJourneyFieldsChange({ serviceType: nextType, ...rest });
-        } else {
             if (nextType !== "FULL_DAY") {
-                onEachJourneyFieldChange("serviceType", nextType);
-            } else {
+                const { serviceType, destinations, ...rest } = journey;
+                onJourneyChange({ serviceType: nextType, ...rest });
+            }
+        } else {
+            if (nextType === "FULL_DAY") {
                 const { serviceType, ...rest } = journey;
-                onAllJourneyFieldsChange({
+                onJourneyChange({
                     serviceType: nextType,
                     destinations: [],
                     ...rest,
                 });
+            } else {
+                const {serviceType, ...rest} = journey
+                onJourneyChange({serviceType: nextType, ...rest})
             }
         }
     }
