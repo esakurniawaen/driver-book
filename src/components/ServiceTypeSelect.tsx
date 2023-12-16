@@ -1,6 +1,6 @@
 import { FullDayJourney, Journey, NonFullDayJourney } from "@/types";
 import { ColorTheme } from "@/types";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import clsx from "clsx";
 
 type ServiceTypeSelectProps = {
@@ -16,12 +16,17 @@ export default function ServiceTypeSelect({
     journey,
     onJourneyChange,
 }: ServiceTypeSelectProps) {
+    const [savedDestinations, setSavedDestinations] = useState(
+        journey.serviceType === "FULL_DAY" ? journey.destinations : []
+    );
+
     function handleServiceTypeChange(evt: ChangeEvent<HTMLSelectElement>) {
         const nextType = evt.target.value as Journey["serviceType"];
 
         if (journey.serviceType === "FULL_DAY") {
             if (nextType !== "FULL_DAY") {
                 const { serviceType, destinations, ...rest } = journey;
+                setSavedDestinations(destinations)
                 onJourneyChange({ serviceType: nextType, ...rest });
             }
         } else {
@@ -29,12 +34,12 @@ export default function ServiceTypeSelect({
                 const { serviceType, ...rest } = journey;
                 onJourneyChange({
                     serviceType: nextType,
-                    destinations: [],
+                    destinations: savedDestinations,
                     ...rest,
                 });
             } else {
-                const {serviceType, ...rest} = journey
-                onJourneyChange({serviceType: nextType, ...rest})
+                const { serviceType, ...rest } = journey;
+                onJourneyChange({ serviceType: nextType, ...rest });
             }
         }
     }

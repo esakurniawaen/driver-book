@@ -4,6 +4,7 @@ import { capitalizeEveryWord } from "@/utils";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { createId } from "@paralleldrive/cuid2";
 import Input from "./Input";
+import _ from "lodash";
 
 interface JourneyFieldsProps {
     spaceBetween: "SMALL" | "LARGE";
@@ -18,8 +19,43 @@ export default function JourneyFields({
     journey,
     onJourneyChange,
 }: JourneyFieldsProps) {
-    if (journey.serviceType === "FULL_DAY") {
-        console.log(journey.destinations);
+    function changeDestinationLocation(id: string, newLocation: string) {
+        if (journey.serviceType !== "FULL_DAY") return;
+
+        onJourneyChange({
+            ...journey,
+            destinations: journey.destinations.map((destination) =>
+                destination.id === id
+                    ? {
+                          ...destination,
+                          location: newLocation,
+                      }
+                    : destination
+            ),
+        });
+    }
+
+    function deleteDestination(id: string) {
+        if (journey.serviceType !== "FULL_DAY") return;
+
+        onJourneyChange({
+            ...journey,
+            destinations: journey.destinations.filter(
+                (destination) => destination.id !== id
+            ),
+        });
+    }
+
+    function createBlankDestination() {
+        if (journey.serviceType !== "FULL_DAY") return;
+
+        onJourneyChange({
+            ...journey,
+            destinations: [
+                ...journey.destinations,
+                { id: createId(), location: "" },
+            ],
+        });
     }
 
     return (
@@ -109,29 +145,13 @@ export default function JourneyFields({
                                 location={destination.location}
                                 indexStartFromFirst={idx + 1}
                                 onChange={(newLocation) =>
-                                    onJourneyChange({
-                                        ...journey,
-                                        destinations: journey.destinations.map(
-                                            (currDestination) =>
-                                                currDestination.id ===
-                                                destination.id
-                                                    ? {
-                                                          ...currDestination,
-                                                          location: newLocation,
-                                                      }
-                                                    : currDestination
-                                        ),
-                                    })
+                                    changeDestinationLocation(
+                                        destination.id,
+                                        newLocation
+                                    )
                                 }
                                 onDelete={() =>
-                                    onJourneyChange({
-                                        ...journey,
-                                        destinations:
-                                            journey.destinations.filter(
-                                                ({ id }) =>
-                                                    id !== destination.id
-                                            ),
-                                    })
+                                    deleteDestination(destination.id)
                                 }
                                 colorTheme={colorTheme}
                             />
@@ -140,15 +160,7 @@ export default function JourneyFields({
 
                     <button
                         className="p-2 mt-2 ml-auto mr-0 block border border-slate-300 rounded-md"
-                        onClick={() =>
-                            onJourneyChange({
-                                ...journey,
-                                destinations: [
-                                    ...journey.destinations,
-                                    { id: createId(), location: "" },
-                                ],
-                            })
-                        }
+                        onClick={createBlankDestination}
                         type="button"
                     >
                         <PlusIcon className="h-5 w-5 text-green-400" />
@@ -178,7 +190,10 @@ export default function JourneyFields({
                     colorTheme={colorTheme}
                     value={journey.note}
                     onChange={(evt) =>
-                        onJourneyChange({ ...journey, note: evt.target.value })
+                        onJourneyChange({
+                            ...journey,
+                            note: _.upperFirst(evt.target.value),
+                        })
                     }
                 />
             </div>
