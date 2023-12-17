@@ -49,7 +49,7 @@ export default function ViewMode({ journey, onModeChange }: ViewModeProps) {
                     {journey.passangerName}
                 </Detail>
                 <Detail>
-                    <span className="text-slate-500">Number of passangers:</span>{" "}
+                    <span className="text-slate-500">Number of pax:</span>{" "}
                     {journey.pax}
                 </Detail>
                 <Detail>

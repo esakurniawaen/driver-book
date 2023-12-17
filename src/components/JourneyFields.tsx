@@ -83,7 +83,7 @@ export default function JourneyFields({
                 }`}
             >
                 <div className="w-1/2">
-                    <label>Number of passangers</label>
+                    <label>Number of pax</label>
                     <Input
                         colorTheme={colorTheme}
                         type="number"
